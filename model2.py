@@ -1,3 +1,4 @@
+from fileinput import filename
 import numpy as np
 import pandas as pd
 from tensorflow.keras.preprocessing.image import img_to_array
@@ -10,6 +11,18 @@ from tensorflow.keras.callbacks import ModelCheckpoint
 from tensorflow import keras
 from tensorflow.keras import layers
 import tensorflow as tf
+import datetime
+import os
+
+class MyCustomCallback(tf.keras.callbacks.Callback):
+    def on_epoch_begin(self, batch, logs=None):
+        print('Evaluacion: batch {} comienza en {}'.format(batch, datetime.datetime.now().time()))
+    
+    def on_epoch_end(self, batch, logs=None):
+        lastBatch = batch - 2
+        filename = "save_at_{lastBatch}.h5"
+        if os.path.exists(filename):
+            os.remove(filename)
 
 image_size = (60, 80)
 df = pd.read_csv('archive/styles.csv',error_bad_lines=False)
@@ -19,7 +32,7 @@ df = df.dropna()
 df.nunique()
 df.columns
 
-cat_columns = ['gender', 'articleType','baseColour', 'season', 'usage']
+cat_columns = ['articleType','baseColour', 'season']
 
 
 for colum in cat_columns:
@@ -31,7 +44,7 @@ for colum in cat_columns:
 
     for i in range(len(value_counts)):
 
-        if values[i] <500:
+        if values[i] <1000:
             break
 
     uses = indexes[:i]
@@ -142,13 +155,14 @@ def make_model(input_shape, num_classes):
     outputs = layers.Dense(units, activation=activation)(x)
     return keras.Model(inputs, outputs)
 
-model = make_model(input_shape = (IY, IX, 3), num_classes=46)
+model = make_model(input_shape = (IY, IX, 3), num_classes=21)
 keras.utils.plot_model(model, show_shapes=True)
 
-E = 5000
+E = 9000
 
 callbacks = [
     keras.callbacks.ModelCheckpoint("save_at_{epoch}.h5"),
+    MyCustomCallback()
 ]
 model.compile(loss='binary_crossentropy',
               optimizer='adam',

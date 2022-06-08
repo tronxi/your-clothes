@@ -13,16 +13,15 @@ labels = ['Backpacks', 'Beige', 'Belts', 'Black', 'Blue', 'Boys', 'Briefs', 'Bro
  'Tshirts' ,'Unisex', 'Wallets', 'Watches', 'White', 'Winter', 'Women', 'Yellow']
 
 img = keras.preprocessing.image.load_img(
-                            "archive/images/22728.jpg", target_size=image_size
+                            "archive/images/50906.jpg", target_size=image_size
                         )
 img_array = keras.preprocessing.image.img_to_array(img)
 img_array = tf.expand_dims(img_array, 0)
 
-model = load_model('save_at_1.h5')
+model = load_model('save_at_4.h5')
 predictions = model.predict(img_array)
 
 num = 0;
 for pred in predictions[0]:
-    if pred > 0.5:
-        print(labels[num] + ": " + str(pred))
+    print(labels[num] + ": " + str(pred))
     num += 1
