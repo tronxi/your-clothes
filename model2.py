@@ -16,13 +16,29 @@ import os
 
 class MyCustomCallback(tf.keras.callbacks.Callback):
     def on_epoch_begin(self, batch, logs=None):
-        print('Evaluacion: batch {} comienza en {}'.format(batch, datetime.datetime.now().time()))
+        lastBatch = batch - 2
+        filename = "/Users/tronxi/workspace/yourClothesMulti/save_at_" + str(lastBatch) + ".h5"
+        if os.path.exists(filename):
+            os.remove(filename)
+        else:
+            print(filename, "no existe")
     
     def on_epoch_end(self, batch, logs=None):
         lastBatch = batch - 2
-        filename = "save_at_{lastBatch}.h5"
+        filename = "/Users/tronxi/workspace/yourClothesMulti/save_at_" + str(lastBatch) + ".h5"
         if os.path.exists(filename):
             os.remove(filename)
+    def get_config(self):
+        config = super().get_config().copy()
+        config.update({
+            'vocab_size': self.vocab_size,
+            'num_layers': self.num_layers,
+            'units': self.units,
+            'd_model': self.d_model,
+            'num_heads': self.num_heads,
+            'dropout': self.dropout,
+        })
+        return config
 
 image_size = (60, 80)
 df = pd.read_csv('archive/styles.csv',error_bad_lines=False)
@@ -161,7 +177,7 @@ keras.utils.plot_model(model, show_shapes=True)
 E = 9000
 
 callbacks = [
-    keras.callbacks.ModelCheckpoint("save_at_{epoch}.h5"),
+    keras.callbacks.ModelCheckpoint("/Users/tronxi/workspace/yourClothesMulti/save_at_{epoch}.h5"),
     MyCustomCallback()
 ]
 model.compile(loss='binary_crossentropy',
