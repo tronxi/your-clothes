@@ -17,6 +17,12 @@ class Bot:
             [{"LEMMA": "ropa"}, {"POS": "ADJ"}]
         ]
 
+        self.recommenderPatterns = [
+            [{"LEMMA": "recomendar"}],
+            [{"LEMMA": "recomendacion"}],
+            [{"LEMMA": "recomiendo"}],
+        ]
+
     def response(self, text):
         doc = self.nlp(text)
 
@@ -39,21 +45,29 @@ class Bot:
                         if token.pos_ == "PROPN" or token.pos_ == "NOUN":
                             message += "hola " + token.text + ", en que puedo ayudarte?"
                             self.name = token.text
-            return message
+            return message, False
         else:
+            found = False
+            recommender = False
             matcher = Matcher(self.nlp.vocab)
             matcher.add("colorPatterns", self.colorPatterns)
             matches = matcher(doc)
-
-            if len(matches) == 0:
-                return "no te he entendido, puedes repetirlo?"
+            for _, start, end in matches:
+                matched_span = doc[start:end]
+                for token in matched_span:
+                    if token.pos_ == "ADJ":
+                        self.color = token.text
+                        found = True
+            
+            matcher = Matcher(self.nlp.vocab)
+            matcher.add("recommenderPatterns", self.recommenderPatterns)
+            matches = matcher(doc)
+            for _, start, end in matches:
+                matched_span = doc[start:end]
+                found = True
+                recommender = True
+            if not found:
+                return "no te he entendido, puedes repetirlo?", False
             else:
-                message = ""
-                for _, start, end in matches:
-                    matched_span = doc[start:end]
-                    for token in matched_span:
-                        if token.pos_ == "ADJ":
-                            message += "Perfecto, ropa de color " + token.text
-                            self.color = token.text
-            return message
+                return self.color, recommender
 
