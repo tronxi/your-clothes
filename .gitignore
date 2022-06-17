@@ -1,2 +1,3 @@
-archive/
+model/archive/
+__pycache__/
 .DS_STORE
