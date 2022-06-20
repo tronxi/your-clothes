@@ -58,6 +58,15 @@ class Bot:
                             message += "hola " + token.text + ", en que puedo ayudarte?"
                             self.name = token.text
             return message, False
+        elif self.new == False:
+            matcher = Matcher(self.nlp.vocab)
+            matcher.add("newPatterns", self.newPatterns)
+            matches = matcher(doc)
+            for _, start, end in matches:
+                matched_span = doc[start:end]
+                print("pasa", matched_span.text)
+                found = True
+                self.new =True
         else:
             found = False
             recommender = False
@@ -79,15 +88,6 @@ class Bot:
                 matched_span = doc[start:end]
                 found = True
                 self.season = matched_span.text
-
-            matcher = Matcher(self.nlp.vocab)
-            matcher.add("newPatterns", self.newPatterns)
-            matches = matcher(doc)
-            for _, start, end in matches:
-                matched_span = doc[start:end]
-                print("pasa", matched_span.text)
-                found = True
-                self.new =True
 
             # matcher = Matcher(self.nlp.vocab)
             # matcher.add("recommenderPatterns", self.recommenderPatterns)
