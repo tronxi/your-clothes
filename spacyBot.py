@@ -39,6 +39,33 @@ class Bot:
             [{"TEXT": {"IN": ["mochila", "cinturon", "ropa interior", "zapatillas", "zapatos", "vaqueros", "vaqueros", "sandalias", "camisa", "pantalones cortos", "calcetines", "zapatillas de deporte", "gafas", "top", "camiseta", "reloj", "pantalones"]}}]
         ]
 
+        self.deleteColor = [
+            [{"ORTH": "borrar"}, {"ORTH": "el"}, {"ORTH": "color"}],
+            [{"ORTH": "cambiar"}, {"ORTH": "el"}, {"ORTH": "color"}],
+            [{"ORTH": "eliminar"}, {"ORTH": "el"}, {"ORTH": "color"}],
+            [{"ORTH": "borrar"}, {"ORTH": "color"}],
+            [{"ORTH": "cambiar"}, {"ORTH": "color"}],
+            [{"ORTH": "eliminar"}, {"ORTH": "color"}],
+        ]
+
+        self.deleteType = [
+            [{"ORTH": "borrar"}, {"ORTH": "el"}, {"ORTH": "tipo"}],
+            [{"ORTH": "cambiar"}, {"ORTH": "el"}, {"ORTH": "tipo"}],
+            [{"ORTH": "eliminar"}, {"ORTH": "el"}, {"ORTH": "tipo"}],
+            [{"ORTH": "borrar"}, {"ORTH": "tipo"}],
+            [{"ORTH": "cambiar"}, {"ORTH": "tipo"}],
+            [{"ORTH": "eliminar"}, {"ORTH": "tipo"}],
+        ]
+
+        self.deleteSeason = [
+            [{"ORTH": "borrar"}, {"ORTH": "la"}, {"ORTH": "temporada"}],
+            [{"ORTH": "cambiar"}, {"ORTH": "la"}, {"ORTH": "temporada"}],
+            [{"ORTH": "eliminar"}, {"ORTH": "la"}, {"ORTH": "temporada"}],
+            [{"ORTH": "borrar"}, {"ORTH": "temporada"}],
+            [{"ORTH": "cambiar"}, {"ORTH": "temporada"}],
+            [{"ORTH": "eliminar"}, {"ORTH": "temporada"}],
+        ]
+
     def response(self, text):
         doc = self.nlp(text)
         self.new = False
@@ -64,6 +91,7 @@ class Bot:
                             self.name = token.text
         else:
             found = False
+            deleted = False
 
             matcher = Matcher(self.nlp.vocab)
             matcher.add("newPatterns", self.newPatterns)
@@ -99,19 +127,37 @@ class Bot:
                     matched_span = doc[start:end]
                     found = True
                     self.type = matched_span.text
-                
+
                 matcher = Matcher(self.nlp.vocab)
-                matcher.add("newPatterns", self.newPatterns)
+                matcher.add("deleteColor", self.deleteColor)
                 matches = matcher(doc)
                 for _, start, end in matches:
-                    matched_span = doc[start:end]
                     found = True
-                    self.new =True
+                    deleted = True
+                    self.color = ""
+                
+                matcher = Matcher(self.nlp.vocab)
+                matcher.add("deleteType", self.deleteType)
+                matches = matcher(doc)
+                for _, start, end in matches:
+                    found = True
+                    deleted = True
+                    self.type = ""
+
+                matcher = Matcher(self.nlp.vocab)
+                matcher.add("deleteSeason", self.deleteSeason)
+                matches = matcher(doc)
+                for _, start, end in matches:
+                    found = True
+                    deleted = True
+                    self.season = ""
                 
             if not found:
                 self.message = "no te he entendido, puedes repetirlo?"
             elif self.new:
                 self.message = "genial, vuelvo a clasificar tu ropa"
+            elif deleted:
+                self.message = "vale, borro ese elemento, en que más puedo ayudarte?"
             else:
                 self.message = self._generateMessage()
         return self.message, self.name, self.color, self.season, self.type, self.new, self.recommender
