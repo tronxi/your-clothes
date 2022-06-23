@@ -22,7 +22,7 @@ class Bot:
         self.colorPatterns = [
             [{"LEMMA": "color"}, {"POS": "ADJ"}],
             [{"LEMMA": "ropa"}, {"POS": "ADJ"}],
-            [{"TEXT": {"IN": ["mochila", "cinturon", "ropa interior", "zapatillas", "zapatos", "vaqueros", "vaqueros", "sandalias", "camisa", "pantalones cortos", "calcetines", "zapatillas de deporte", "gafas", "top", "camiseta", "reloj", "pantalones"]}}, {"POS": "ADJ"}],
+            [{"TEXT": {"IN": ["mochila", "cinturon", "ropa interior", "zapatillas", "zapatos", "vaqueros", "sandalias", "camisa", "pantalones cortos", "calcetines", "deportivas", "gafas", "top", "camiseta", "reloj", "pantalones"]}}, {"POS": "ADJ"}],
             [{"TEXT": {"IN": ["primavera", "verano", "otoño", "invierno", "calor", "frio"]}}, {"POS": "ADJ"}]
         ]
 
@@ -37,25 +37,25 @@ class Bot:
         ]
 
         self.typePatterns = [
-            [{"TEXT": {"IN": ["mochila", "cinturon", "ropa interior", "zapatillas", "zapatos", "vaqueros", "vaqueros", "sandalias", "camisa", "pantalones cortos", "calcetines", "zapatillas de deporte", "gafas", "top", "camiseta", "reloj", "pantalones"]}}]
+            [{"TEXT": {"IN": ["mochila", "cinturon", "ropa interior", "zapatillas", "zapatos", "vaqueros", "sandalias", "camisa", "pantalones cortos", "calcetines", "deportivas", "gafas", "top", "camiseta", "reloj", "pantalones"]}}]
         ]
 
         self.deleteColor = [
-            [{"ORTH": "borrar"}, {"ORTH": "el"}, {"ORTH": "color"}],
-            [{"ORTH": "cambiar"}, {"ORTH": "el"}, {"ORTH": "color"}],
-            [{"ORTH": "eliminar"}, {"ORTH": "el"}, {"ORTH": "color"}],
-            [{"ORTH": "borrar"}, {"ORTH": "color"}],
-            [{"ORTH": "cambiar"}, {"ORTH": "color"}],
-            [{"ORTH": "eliminar"}, {"ORTH": "color"}],
+            [{"LEMMA": "borrar"}, {"ORTH": "el"}, {"ORTH": "color"}],
+            [{"LEMMA": "cambiar"}, {"ORTH": "el"}, {"ORTH": "color"}],
+            [{"LEMMA": "eliminar"}, {"ORTH": "el"}, {"ORTH": "color"}],
+            [{"LEMMA": "borrar"}, {"ORTH": "color"}],
+            [{"LEMMA": "cambiar"}, {"ORTH": "color"}],
+            [{"LEMMA": "eliminar"}, {"ORTH": "color"}],
         ]
 
         self.deleteType = [
-            [{"ORTH": "borrar"}, {"ORTH": "el"}, {"ORTH": "tipo"}],
-            [{"ORTH": "cambiar"}, {"ORTH": "el"}, {"ORTH": "tipo"}],
-            [{"ORTH": "eliminar"}, {"ORTH": "el"}, {"ORTH": "tipo"}],
-            [{"ORTH": "borrar"}, {"ORTH": "tipo"}],
-            [{"ORTH": "cambiar"}, {"ORTH": "tipo"}],
-            [{"ORTH": "eliminar"}, {"ORTH": "tipo"}],
+            [{"LEMMA": "borrar"}, {"ORTH": "el"}, {"ORTH": "tipo"}],
+            [{"LEMMA": "cambiar"}, {"ORTH": "el"}, {"ORTH": "tipo"}],
+            [{"LEMMA": "eliminar"}, {"ORTH": "el"}, {"ORTH": "tipo"}],
+            [{"LEMMA": "borrar"}, {"ORTH": "tipo"}],
+            [{"LEMMA": "cambiar"}, {"ORTH": "tipo"}],
+            [{"LEMMA": "eliminar"}, {"ORTH": "tipo"}],
         ]
 
         self.deleteSeason = [
@@ -70,7 +70,7 @@ class Bot:
     def response(self, text):
         doc = self.nlp(text)
         self.new = False
-        self.recommender = True
+        self.recommender = False
         self.message = ""
         # print("####")
         # for token in doc:
@@ -101,6 +101,7 @@ class Bot:
                 matched_span = doc[start:end]
                 found = True
                 self.new =True
+                self.recommender = True
             
             if not found:
                 matcher = Matcher(self.nlp.vocab)
@@ -112,6 +113,7 @@ class Bot:
                         if token.pos_ == "ADJ":
                             self.color = token.text
                             found = True
+                            self.recommender = True
                 
                 matcher = Matcher(self.nlp.vocab)
                 matcher.add("seasonPatterns", self.seasonPatterns)
@@ -120,6 +122,7 @@ class Bot:
                     matched_span = doc[start:end]
                     found = True
                     self.season = matched_span.text
+                    self.recommender = True
 
                 matcher = Matcher(self.nlp.vocab)
                 matcher.add("typePatterns", self.typePatterns)
@@ -128,6 +131,7 @@ class Bot:
                     matched_span = doc[start:end]
                     found = True
                     self.type = matched_span.text
+                    self.recommender = True
 
                 matcher = Matcher(self.nlp.vocab)
                 matcher.add("deleteColor", self.deleteColor)
@@ -136,6 +140,7 @@ class Bot:
                     found = True
                     deleted = True
                     self.color = ""
+                    self.recommender = True
                 
                 matcher = Matcher(self.nlp.vocab)
                 matcher.add("deleteType", self.deleteType)
@@ -144,6 +149,7 @@ class Bot:
                     found = True
                     deleted = True
                     self.type = ""
+                    self.recommender = True
 
                 matcher = Matcher(self.nlp.vocab)
                 matcher.add("deleteSeason", self.deleteSeason)
@@ -152,6 +158,7 @@ class Bot:
                     found = True
                     deleted = True
                     self.season = ""
+                    self.recommender = True
                 
             if not found:
                 self.message = "no te he entendido, puedes repetirlo?"

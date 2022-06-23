@@ -22,6 +22,7 @@ class ClasificadorAgent(Agent):
                     for image in glob.glob("./armario/*"):
                         imageList = []
                         imageList.append(image)
+                        print(image)
                         img = keras.preprocessing.image.load_img(
                             image, target_size=image_size
                         )
@@ -49,7 +50,7 @@ class ClasificadorAgent(Agent):
             self.seasonClasses = ['Fall', 'Spring', 'Summer', 'Winter']
 
             self.typeModel = load_model("./model/save_at_type_17.h5")
-            self.typeClasses = ['Backpacks', 'Belts', 'Briefs', 'Casual Shoes', 'Formal Shoes', 'Jeans', 'Sandals', 'Shirts', 'Shorts', 'Socks', 'Sports Shoes', 'Sunglasses', 'Tops', 'Trousers', 'Tshirts', 'Wathes']
+            self.typeClasses = ['Backpacks', 'Belts', 'Briefs', 'Casual Shoes', 'Formal Shoes', 'Jeans', 'Sandals', 'Shirts', 'Shorts', 'Socks', 'Sports Shoes', 'Sunglasses', 'Tops', 'Trousers', 'Tshirts', 'Watches']
 
                 
     async def setup(self):
