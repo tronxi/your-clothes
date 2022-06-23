@@ -7,6 +7,7 @@ class Bot:
         self.color = ""
         self.season = ""
         self.new = False
+        self.recommender = False
         self.nlp = spacy.load("es_core_news_sm")
         self.namePatterns = [
             [{"LEMMA": "llamar"} ,{"POS": "PROPN"}],
@@ -37,7 +38,8 @@ class Bot:
 
     def response(self, text):
         doc = self.nlp(text)
-
+        self.new = False
+        self.recommender = False
         # print("####")
         # for token in doc:
         #     print(token.text, token.pos_)
@@ -57,19 +59,9 @@ class Bot:
                         if token.pos_ == "PROPN" or token.pos_ == "NOUN":
                             message += "hola " + token.text + ", en que puedo ayudarte?"
                             self.name = token.text
-            return message, False
-        elif self.new == False:
-            matcher = Matcher(self.nlp.vocab)
-            matcher.add("newPatterns", self.newPatterns)
-            matches = matcher(doc)
-            for _, start, end in matches:
-                matched_span = doc[start:end]
-                print("pasa", matched_span.text)
-                found = True
-                self.new =True
+            return message, self.name, self.color, self.season, self.new, self.recommender
         else:
             found = False
-            recommender = False
 
             matcher = Matcher(self.nlp.vocab)
             matcher.add("colorPatterns", self.colorPatterns)
@@ -88,6 +80,14 @@ class Bot:
                 matched_span = doc[start:end]
                 found = True
                 self.season = matched_span.text
+            
+            matcher = Matcher(self.nlp.vocab)
+            matcher.add("newPatterns", self.newPatterns)
+            matches = matcher(doc)
+            for _, start, end in matches:
+                matched_span = doc[start:end]
+                found = True
+                self.new =True
 
             # matcher = Matcher(self.nlp.vocab)
             # matcher.add("recommenderPatterns", self.recommenderPatterns)
@@ -95,10 +95,10 @@ class Bot:
             # for _, start, end in matches:
             #     matched_span = doc[start:end]
             #     found = True
-            #     recommender = True
+            #     self.recommender = True
                 
             if not found:
-                return "no te he entendido, puedes repetirlo?", False
+                return "no te he entendido, puedes repetirlo?", self.name, self.color, self.season, self.new, self.recommender
             else:
-                return self.name, self.color, self.season, self.new, recommender
+                return "message", self.name, self.color, self.season, self.new, self.recommender
 

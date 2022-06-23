@@ -8,13 +8,9 @@ class BotAgent(agent.Agent):
         self.bot = Bot()
 
 class CallClasificator(OneShotBehaviour):
-    def __init__(self, message): 
-        self.message = message
-        super().__init__()
 
     async def run(self):
         msg = Message(to="test-dasi-ucm@yax.im")
-        msg.body = self.message
         msg.set_metadata("performative", "inform")
         await self.send(msg)
 
