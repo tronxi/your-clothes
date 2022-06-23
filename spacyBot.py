@@ -21,7 +21,8 @@ class Bot:
         self.colorPatterns = [
             [{"LEMMA": "color"}, {"POS": "ADJ"}],
             [{"LEMMA": "ropa"}, {"POS": "ADJ"}],
-            [{"TEXT": {"IN": ["mochila", "cinturon", "ropa interior", "zapatillas", "zapatos", "vaqueros", "vaqueros", "sandalias", "camisa", "pantalones cortos", "calcetines", "zapatillas de deporte", "gafas", "top", "camiseta", "reloj", "pantalones"]}}, {"POS": "ADJ"}]
+            [{"TEXT": {"IN": ["mochila", "cinturon", "ropa interior", "zapatillas", "zapatos", "vaqueros", "vaqueros", "sandalias", "camisa", "pantalones cortos", "calcetines", "zapatillas de deporte", "gafas", "top", "camiseta", "reloj", "pantalones"]}}, {"POS": "ADJ"}],
+            [{"TEXT": {"IN": ["primavera", "verano", "otoño", "invierno", "calor", "frio"]}}, {"POS": "ADJ"}]
         ]
 
         self.seasonPatterns = [
@@ -65,38 +66,47 @@ class Bot:
             found = False
 
             matcher = Matcher(self.nlp.vocab)
-            matcher.add("colorPatterns", self.colorPatterns)
-            matches = matcher(doc)
-            for _, start, end in matches:
-                matched_span = doc[start:end]
-                for token in matched_span:
-                    if token.pos_ == "ADJ":
-                        self.color = token.text
-                        found = True
-            
-            matcher = Matcher(self.nlp.vocab)
-            matcher.add("seasonPatterns", self.seasonPatterns)
-            matches = matcher(doc)
-            for _, start, end in matches:
-                matched_span = doc[start:end]
-                found = True
-                self.season = matched_span.text
-
-            matcher = Matcher(self.nlp.vocab)
-            matcher.add("typePatterns", self.typePatterns)
-            matches = matcher(doc)
-            for _, start, end in matches:
-                matched_span = doc[start:end]
-                found = True
-                self.type = matched_span.text
-            
-            matcher = Matcher(self.nlp.vocab)
             matcher.add("newPatterns", self.newPatterns)
             matches = matcher(doc)
             for _, start, end in matches:
                 matched_span = doc[start:end]
                 found = True
                 self.new =True
+            
+            if not found:
+                matcher = Matcher(self.nlp.vocab)
+                matcher.add("colorPatterns", self.colorPatterns)
+                matches = matcher(doc)
+                for _, start, end in matches:
+                    matched_span = doc[start:end]
+                    for token in matched_span:
+                        if token.pos_ == "ADJ":
+                            self.color = token.text
+                            found = True
+                
+                matcher = Matcher(self.nlp.vocab)
+                matcher.add("seasonPatterns", self.seasonPatterns)
+                matches = matcher(doc)
+                for _, start, end in matches:
+                    matched_span = doc[start:end]
+                    found = True
+                    self.season = matched_span.text
+
+                matcher = Matcher(self.nlp.vocab)
+                matcher.add("typePatterns", self.typePatterns)
+                matches = matcher(doc)
+                for _, start, end in matches:
+                    matched_span = doc[start:end]
+                    found = True
+                    self.type = matched_span.text
+                
+                matcher = Matcher(self.nlp.vocab)
+                matcher.add("newPatterns", self.newPatterns)
+                matches = matcher(doc)
+                for _, start, end in matches:
+                    matched_span = doc[start:end]
+                    found = True
+                    self.new =True
                 
             if not found:
                 self.message = "no te he entendido, puedes repetirlo?"
