@@ -24,10 +24,13 @@ if __name__ == "__main__":
     while True:
         try:
             userInput = input()
-            message, name, color, season, new, recommender = botAgent.bot.response(userInput)
+            message, name, color, season, type, new, recommender = botAgent.bot.response(userInput)
             print(message, name, color, season, new, recommender)
             if new:
                 behaviour = CallClasificator()
+                botAgent.add_behaviour(behaviour, template)
+            if recommender:
+                behaviour = CallRecomendador(color, season, type)
                 botAgent.add_behaviour(behaviour, template)
         except(KeyboardInterrupt, EOFError, SystemExit):
             botAgent.stop()

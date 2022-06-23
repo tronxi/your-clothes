@@ -7,7 +7,11 @@ class RecomendadorAgent(Agent):
         async def run(self):
             msg = await self.receive(timeout=90000)
             if msg:
-                print("Recomendador con mensaje", msg.body)
+                caracteristicas = msg.body.split(",")
+                color = caracteristicas[0]
+                season = caracteristicas[1]
+                type = caracteristicas[2]
+                print("recomendador", "color", color, "season", season, "type", type)
                 
     async def setup(self):
         b = self.RecomendadorBehaviour()

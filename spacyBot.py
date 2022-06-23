@@ -6,6 +6,7 @@ class Bot:
         self.name = ""
         self.color = ""
         self.season = ""
+        self.type = ""
         self.new = False
         self.recommender = False
         self.nlp = spacy.load("es_core_news_sm")
@@ -39,7 +40,7 @@ class Bot:
     def response(self, text):
         doc = self.nlp(text)
         self.new = False
-        self.recommender = False
+        self.recommender = True
         # print("####")
         # for token in doc:
         #     print(token.text, token.pos_)
@@ -59,7 +60,7 @@ class Bot:
                         if token.pos_ == "PROPN" or token.pos_ == "NOUN":
                             message += "hola " + token.text + ", en que puedo ayudarte?"
                             self.name = token.text
-            return message, self.name, self.color, self.season, self.new, self.recommender
+            return message, self.name, self.color, self.season, self.type, self.new, self.recommender
         else:
             found = False
 
@@ -98,7 +99,7 @@ class Bot:
             #     self.recommender = True
                 
             if not found:
-                return "no te he entendido, puedes repetirlo?", self.name, self.color, self.season, self.new, self.recommender
+                return "no te he entendido, puedes repetirlo?", self.name, self.color, self.season, self.type, self.new, self.recommender
             else:
-                return "message", self.name, self.color, self.season, self.new, self.recommender
+                return "message", self.name, self.color, self.season, self.type, self.new, self.recommender
 

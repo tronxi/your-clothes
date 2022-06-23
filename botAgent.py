@@ -15,12 +15,14 @@ class CallClasificator(OneShotBehaviour):
         await self.send(msg)
 
 class CallRecomendador(OneShotBehaviour):
-    def __init__(self, message): 
-        self.message = message
+    def __init__(self, color, season, type): 
+        self.color = color
+        self.season = season
+        self.type = type
         super().__init__()
 
     async def run(self):
         msg = Message(to="recomendador-dasi-ucm-clothes@yax.im")
-        msg.body = self.message
+        msg.body = self.color + "," + self.season + "," + self.type
         msg.set_metadata("performative", "inform")
         await self.send(msg)
