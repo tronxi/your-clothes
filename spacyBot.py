@@ -14,9 +14,10 @@ class Bot:
         self.nlp = spacy.load("es_core_news_sm")
         self.namePatterns = [
             [{"LEMMA": "llamar"} ,{"POS": "PROPN"}],
-            # [{"LEMMA": "nombre"}, {"POS": "AUX", "OP": "?"},{"POS": "PROPN"}],
+            [{"LEMMA": "nombre"}, {"POS": "AUX", "OP": "?"},{"POS": "PROPN"}],
             [{"TEXT": "soy"}, {"POS": "PROPN"}],
             [{"POS": "NOUN"}],
+            [{"POS": "PROPN"}],
         ]
         self.colorPatterns = [
             [{"LEMMA": "color"}, {"POS": "ADJ"}],
@@ -81,13 +82,13 @@ class Bot:
             matcher.add("namePatterns", self.namePatterns)
             matches = matcher(doc)
             if len(matches) == 0:
-                return "no te he entendido, puedes repetirlo?"
+                self.message = "no te he entendido, puedes repetirlo?"
             else:
                 for _, start, end in matches:
                     matched_span = doc[start:end]
                     for token in matched_span:
                         if token.pos_ == "PROPN" or token.pos_ == "NOUN":
-                            self.message += "hola " + token.text + ", en que puedo ayudarte?"
+                            self.message = "hola " + token.text + ", en que puedo ayudarte?"
                             self.name = token.text
         else:
             found = False
