@@ -1,3 +1,4 @@
+from urllib import response
 import spacy
 from spacy.matcher import Matcher
 
@@ -9,6 +10,7 @@ class Bot:
         self.type = ""
         self.new = False
         self.recommender = False
+        self.message = ""
         self.nlp = spacy.load("es_core_news_sm")
         self.namePatterns = [
             [{"LEMMA": "llamar"} ,{"POS": "PROPN"}],
@@ -18,13 +20,8 @@ class Bot:
         ]
         self.colorPatterns = [
             [{"LEMMA": "color"}, {"POS": "ADJ"}],
-            [{"LEMMA": "ropa"}, {"POS": "ADJ"}]
-        ]
-
-        self.recommenderPatterns = [
-            [{"LEMMA": "recomendar"}],
-            [{"LEMMA": "recomendacion"}],
-            [{"LEMMA": "recomiendo"}],
+            [{"LEMMA": "ropa"}, {"POS": "ADJ"}],
+            [{"TEXT": {"IN": ["mochila", "cinturon", "ropa interior", "zapatillas", "zapatos", "vaqueros", "vaqueros", "sandalias", "camisa", "pantalones cortos", "calcetines", "zapatillas de deporte", "gafas", "top", "camiseta", "reloj", "pantalones"]}}, {"POS": "ADJ"}]
         ]
 
         self.seasonPatterns = [
@@ -37,10 +34,15 @@ class Bot:
             [{"LEMMA": "añadir"}],
         ]
 
+        self.typePatterns = [
+            [{"TEXT": {"IN": ["mochila", "cinturon", "ropa interior", "zapatillas", "zapatos", "vaqueros", "vaqueros", "sandalias", "camisa", "pantalones cortos", "calcetines", "zapatillas de deporte", "gafas", "top", "camiseta", "reloj", "pantalones"]}}]
+        ]
+
     def response(self, text):
         doc = self.nlp(text)
         self.new = False
         self.recommender = True
+        self.message = ""
         # print("####")
         # for token in doc:
         #     print(token.text, token.pos_)
@@ -53,14 +55,12 @@ class Bot:
             if len(matches) == 0:
                 return "no te he entendido, puedes repetirlo?"
             else:
-                message = ""
                 for _, start, end in matches:
                     matched_span = doc[start:end]
                     for token in matched_span:
                         if token.pos_ == "PROPN" or token.pos_ == "NOUN":
-                            message += "hola " + token.text + ", en que puedo ayudarte?"
+                            self.message += "hola " + token.text + ", en que puedo ayudarte?"
                             self.name = token.text
-            return message, self.name, self.color, self.season, self.type, self.new, self.recommender
         else:
             found = False
 
@@ -81,6 +81,14 @@ class Bot:
                 matched_span = doc[start:end]
                 found = True
                 self.season = matched_span.text
+
+            matcher = Matcher(self.nlp.vocab)
+            matcher.add("typePatterns", self.typePatterns)
+            matches = matcher(doc)
+            for _, start, end in matches:
+                matched_span = doc[start:end]
+                found = True
+                self.type = matched_span.text
             
             matcher = Matcher(self.nlp.vocab)
             matcher.add("newPatterns", self.newPatterns)
@@ -89,17 +97,23 @@ class Bot:
                 matched_span = doc[start:end]
                 found = True
                 self.new =True
-
-            # matcher = Matcher(self.nlp.vocab)
-            # matcher.add("recommenderPatterns", self.recommenderPatterns)
-            # matches = matcher(doc)
-            # for _, start, end in matches:
-            #     matched_span = doc[start:end]
-            #     found = True
-            #     self.recommender = True
                 
             if not found:
-                return "no te he entendido, puedes repetirlo?", self.name, self.color, self.season, self.type, self.new, self.recommender
+                self.message = "no te he entendido, puedes repetirlo?"
+            elif self.new:
+                self.message = "genial, vuelvo a clasificar tu ropa"
             else:
-                return "message", self.name, self.color, self.season, self.type, self.new, self.recommender
+                self.message = self._generateMessage()
+        return self.message, self.name, self.color, self.season, self.type, self.new, self.recommender
+
+    def _generateMessage(self):
+        message = "Vale, busco ropa"
+        if self.type != "":
+            message += " tipo " + self.type
+        if self.color != "":
+            message += " color " + self.color
+        if self.season != "":
+            message += " temporada " + self.season
+        return message
+
 

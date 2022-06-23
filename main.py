@@ -4,8 +4,11 @@ from spade.template import Template
 from clasificadorAgent import ClasificadorAgent
 from botAgent import CallClasificator, CallRecomendador
 from recomendadorAgent import RecomendadorAgent
+import os
 
 if __name__ == "__main__":
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
+    
     botAgent = BotAgent("bot-dasi-ucm-clothes@yax.im", "1234")
     future = botAgent.start()
     future.result()
@@ -25,7 +28,7 @@ if __name__ == "__main__":
         try:
             userInput = input()
             message, name, color, season, type, new, recommender = botAgent.bot.response(userInput)
-            print(message, name, color, season, new, recommender)
+            print(message)
             if new:
                 behaviour = CallClasificator()
                 botAgent.add_behaviour(behaviour, template)
