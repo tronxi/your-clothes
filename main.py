@@ -7,7 +7,7 @@ from recomendadorAgent import RecomendadorAgent
 import os
 
 if __name__ == "__main__":
-    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
     
     botAgent = BotAgent("bot-dasi-ucm-clothes@yax.im", "1234")
     future = botAgent.start()

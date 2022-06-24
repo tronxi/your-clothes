@@ -59,12 +59,12 @@ class Bot:
         ]
 
         self.deleteSeason = [
-            [{"ORTH": "borrar"}, {"ORTH": "la"}, {"ORTH": "temporada"}],
-            [{"ORTH": "cambiar"}, {"ORTH": "la"}, {"ORTH": "temporada"}],
-            [{"ORTH": "eliminar"}, {"ORTH": "la"}, {"ORTH": "temporada"}],
-            [{"ORTH": "borrar"}, {"ORTH": "temporada"}],
-            [{"ORTH": "cambiar"}, {"ORTH": "temporada"}],
-            [{"ORTH": "eliminar"}, {"ORTH": "temporada"}],
+            [{"LEMMA": "borrar"}, {"ORTH": "la"}, {"ORTH": "temporada"}],
+            [{"LEMMA": "cambiar"}, {"ORTH": "la"}, {"ORTH": "temporada"}],
+            [{"LEMMA": "eliminar"}, {"ORTH": "la"}, {"ORTH": "temporada"}],
+            [{"LEMMA": "borrar"}, {"ORTH": "temporada"}],
+            [{"LEMMA": "cambiar"}, {"ORTH": "temporada"}],
+            [{"LEMMA": "eliminar"}, {"ORTH": "temporada"}],
         ]
 
     def response(self, text):

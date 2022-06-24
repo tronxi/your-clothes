@@ -54,6 +54,7 @@ class ClasificadorAgent(Agent):
 
                 
     async def setup(self):
+        tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
         b = self.ClasificadorBehaviour()
         template = Template()
         template.set_metadata("performative", "inform")
