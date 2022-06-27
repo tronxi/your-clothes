@@ -43,13 +43,13 @@ class ClasificadorAgent(Agent):
 
                         writer.writerow(imageList)
         async def on_start(self):
-            self.colorModel = load_model('./model/save_at_color_6.h5')
+            self.colorModel = load_model('./model/save_at_color_21.h5')
             self.colorClasses = ['Beige', 'Black', 'Blue', 'Brown', 'Gold', 'Green', 'Grey', 'Maroon', 'Navy Blue', 'Orange', 'Pink', 'Purple', 'Red', 'Silver', 'White', 'Yellow']
 
-            self.seasonModel = load_model("./model/save_at_season_6.h5")
+            self.seasonModel = load_model("./model/save_at_season_24.h5")
             self.seasonClasses = ['Fall', 'Spring', 'Summer', 'Winter']
 
-            self.typeModel = load_model("./model/save_at_type_17.h5")
+            self.typeModel = load_model("./model/save_at_type_47.h5")
             self.typeClasses = ['Backpacks', 'Belts', 'Briefs', 'Casual Shoes', 'Formal Shoes', 'Jeans', 'Sandals', 'Shirts', 'Shorts', 'Socks', 'Sports Shoes', 'Sunglasses', 'Tops', 'Trousers', 'Tshirts', 'Watches']
 
                 

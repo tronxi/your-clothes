@@ -1,9 +1,14 @@
 image,color,season,type
-./armario/1551.jpg,Black,Summer,Sports Shoes
-./armario/4664.jpg,White,Winter,Watches
-./armario/1525.jpg,Blue,Summer,Backpacks
-./armario/2616.jpg,Blue,Summer,Sports Shoes
-./armario/1526.jpg,Grey,Winter,Backpacks
-./armario/1529.jpg,Red,Summer,Tshirts
-./armario/4977.jpg,Blue,Summer,Shorts
-./armario/2050.jpg,Navy Blue,Summer,Tshirts
+./armario/camisa_azul.jpeg,Blue,Summer,Shirts
+./armario/zapatillas_azules.jpeg,Blue,Summer,Casual Shoes
+./armario/camiseta_roja.webp,Red,Fall,Tshirts
+./armario/zapatillas_rojas.jpeg,Red,Summer,Casual Shoes
+./armario/gafas.jpeg,Grey,Winter,Sunglasses
+./armario/camisa_verde.jpeg,Green,Summer,Shirts
+./armario/deportivas_azules.jpeg,Blue,Summer,Sports Shoes
+./armario/camiseta_negra.webp,Black,Fall,Tshirts
+./armario/reloj_blanco.jpg,White,Winter,Watches
+./armario/pantalones_negros.webp,Black,Summer,Trousers
+./armario/zapatillas_naranjas.jpeg,Red,Summer,Casual Shoes
+./armario/mochila_verde.jpeg,Green,Summer,Backpacks
+./armario/vaqueros_azules.jpeg,Blue,Fall,Jeans

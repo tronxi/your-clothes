@@ -93,7 +93,7 @@ class RecomendadorAgent(Agent):
                 "camisa": "Shirts", 
                 "pantalones cortos": "Shorts", 
                 "calcetines": "Socks", 
-                "deportivas": "Sport Shoes", 
+                "deportivas": "Sports Shoes", 
                 "gafas": "Sunglasses", 
                 "top": "Tops", 
                 "camiseta": "Tshirts", 
